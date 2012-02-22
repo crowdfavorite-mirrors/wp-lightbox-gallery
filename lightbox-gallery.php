@@ -95,7 +95,7 @@ function lightbox_gallery_wp_head() {
 			if (@file_exists(trailingslashit(get_stylesheet_directory()).'lightbox-gallery.css')) {
 				echo '<link rel="stylesheet" href="'.get_stylesheet_directory_uri().'/lightbox-gallery.css" type="text/css" />'."\n";	
 			} else {
-				echo '<link rel="stylesheet" type="text/css" href="' . trailingslashit(WP_PLUGIN_URL) . 'lightbox-gallery.css" />'."\n";
+				echo '<link rel="stylesheet" type="text/css" href="' . trailingslashit(WP_PLUGIN_URL) . 'lightbox-gallery/lightbox-gallery.css" />'."\n";
 			}
 		endif;
 	}
@@ -112,7 +112,6 @@ function lightbox_gallery_wp_print_scripts() {
 		$plugin_dir = str_replace( ABSPATH, '', dirname(__FILE__) );
 	else
 		$plugin_dir = dirname( plugin_basename(__FILE__) );
-	
 	$flag = false;
 
 	if ( !empty($options['global_settings']['lightbox_gallery_enforce_loading_scripts']) ) :
@@ -152,18 +151,17 @@ function lightbox_gallery_wp_print_scripts() {
 	if ( !is_admin() && $flag ) :
 		wp_enqueue_script( 'jquery' );
 		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' && file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') ) :
-			wp_enqueue_script( 'highslide', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js', false, '', $in_footer );
+			wp_enqueue_script( 'highslide'	, WP_PLUGIN_URL . '/' . $plugin_dir . '/js/highslide.js', false, '', $in_footer );
 		else :
-			wp_enqueue_script( 'dimensions', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.dimensions.js', array('jquery'), '', $in_footer );
-			wp_enqueue_script( 'bgiframe', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.bgiframe.js', array('jquery'), '', $in_footer ) ;
-			wp_enqueue_script( 'lightbox', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js', array('jquery'), '', $in_footer );
-			wp_enqueue_script( 'tooltip', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.tooltip.js', array('jquery'), '', $in_footer );
+			wp_enqueue_script( 'dimensions'	, WP_PLUGIN_URL . '/' . $plugin_dir . '/js/jquery.dimensions.js', array('jquery'), '', $in_footer );
+			wp_enqueue_script( 'bgiframe'	, WP_PLUGIN_URL . '/' . $plugin_dir . '/js/jquery.bgiframe.js', array('jquery'), '', $in_footer ) ;
+			wp_enqueue_script( 'lightbox'	, WP_PLUGIN_URL . '/' . $plugin_dir . '/js/jquery.lightbox.js', array('jquery'), '', $in_footer );
+			wp_enqueue_script( 'tooltip'	, WP_PLUGIN_URL . '/' . $plugin_dir . '/js/jquery.tooltip.js', array('jquery'), '', $in_footer );
 		endif;
-		if (@file_exists(TEMPLATEPATH.'/lightbox-gallery.js')) :
-			$template = get_template();
-			wp_enqueue_script( 'lightbox-gallery', '/wp-content/themes/' . $template . '/lightbox-gallery.js', array('jquery'), '', $in_footer );
+		if (@file_exists(trailingslashit(get_stylesheet_directory()).'lightbox-gallery.js')) :
+			wp_enqueue_script( 'lightbox-gallery', trailingslashit(get_stylesheet_directory_uri()) . 'lightbox-gallery.js', array('jquery'), '', $in_footer );
 		else :
-			wp_enqueue_script( 'lightbox-gallery', '/' . PLUGINDIR . '/' . $plugin_dir . '/lightbox-gallery.js', array('jquery'), '', $in_footer );
+			wp_enqueue_script( 'lightbox-gallery', WP_PLUGIN_URL . '/' . $plugin_dir . '/lightbox-gallery.js', array('jquery'), '', $in_footer );
 		endif;
 	endif;
 }
@@ -668,4 +666,3 @@ function wp_link_pages_for_lightbox_gallery($args = '') {
 
 	return $output;
 }
-?>
