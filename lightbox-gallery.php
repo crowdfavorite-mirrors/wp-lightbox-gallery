@@ -92,10 +92,10 @@ function lightbox_gallery_wp_head() {
 
 	if ( !is_admin() && $flag ) {
 		if ( empty($options['global_settings']['lightbox_gallery_disable_lightbox_gallery_css']) ) :
-			if (@file_exists(TEMPLATEPATH.'/lightbox-gallery.css')) {
+			if (@file_exists(trailingslashit(get_stylesheet_directory()).'lightbox-gallery.css')) {
 				echo '<link rel="stylesheet" href="'.get_stylesheet_directory_uri().'/lightbox-gallery.css" type="text/css" />'."\n";	
 			} else {
-				echo '<link rel="stylesheet" type="text/css" href="' . get_option('siteurl') . '/' . PLUGINDIR . '/' . $plugin_dir . '/lightbox-gallery.css" />'."\n";
+				echo '<link rel="stylesheet" type="text/css" href="' . trailingslashit(WP_PLUGIN_URL) . 'lightbox-gallery.css') . " />'."\n";
 			}
 		endif;
 	}
@@ -177,9 +177,9 @@ function lightbox_gallery_print_path_header() {
 		echo '<script type="text/javascript">'."\n";
 		echo '// <![CDATA['."\n";
 		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' ) :
-			echo 'var graphicsDir = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/graphics/";'."\n";
+			echo 'var graphicsDir = "'.trailingslashit(WP_PLUGIN_URL).'lightbox-gallery/graphics/";'."\n";
 		else :
-			echo 'var lightbox_path = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/";'."\n";
+			echo 'var lightbox_path = "'.trailingslashit(WP_PLUGIN_URL).'lightbox-gallery/";'."\n";
 		endif;
 		echo '// ]]>'."\n";
 		echo '</script>'."\n";
@@ -195,9 +195,9 @@ function lightbox_gallery_print_path_footer() {
 		echo '<script type="text/javascript">'."\n";
 		echo '// <![CDATA['."\n";
 		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' ) :
-			echo 'var graphicsDir = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/graphics/";'."\n";
+			echo 'var graphicsDir = "'.trailingslashit(WP_PLUGIN_URL).'lightbox-gallery/graphics/";'."\n";
 		else :
-			echo 'var lightbox_path = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/";'."\n";
+			echo 'var lightbox_path = "'.trailingslashit(WP_PLUGIN_URL).'lightbox-gallery/";'."\n";
 		endif;
 		echo '// ]]>'."\n";
 		echo '</script>'."\n";
@@ -254,7 +254,7 @@ function lightbox_gallery_admin() {
 		$plugin_dir = dirname( plugin_basename(__FILE__) );
 ?>
 <?php if ( !empty($message) ) : ?>
-<div id="message" class="updated"><p><?php echo $message; ?></p></div>
+	<div id="message" class="updated"><p><?php echo esc_html($message); ?></p></div>
 <?php endif; ?>
 <div class="wrap">
 <div id="icon-plugins" class="icon32"><br/></div>
@@ -293,11 +293,11 @@ function lightbox_gallery_admin() {
 </td></tr>
 <tr><td>
 <p><label for="lightbox_gallery_categories"><?php _e('In case that you would like to use the lightbox in certain categories (comma-deliminated)', 'lightbox-gallery'); ?>:<br />
-<input type="text" name="lightbox_gallery_categories" id="lightbox_gallery_categories" value="<?php if ( isset($options['global_settings']['lightbox_gallery_categories']) ) echo $options['global_settings']['lightbox_gallery_categories']; ?>" /></label></p>
+	<input type="text" name="lightbox_gallery_categories" id="lightbox_gallery_categories" value="<?php if ( isset($options['global_settings']['lightbox_gallery_categories']) ) echo esc_attr($options['global_settings']['lightbox_gallery_categories']); ?>" /></label></p>
 </td></tr>
 <tr><td>
 <p><label for="lightbox_gallery_pages"><?php _e('In case that you would like to use the lightbox in certain pages (comma-deliminated)', 'lightbox-gallery'); ?>:<br />
-<input type="text" name="lightbox_gallery_pages" id="lightbox_gallery_pages" value="<?php if ( isset($options['global_settings']['lightbox_gallery_pages']) ) echo $options['global_settings']['lightbox_gallery_pages']; ?>" /></label></p>
+	<input type="text" name="lightbox_gallery_pages" id="lightbox_gallery_pages" value="<?php if ( isset($options['global_settings']['lightbox_gallery_pages']) ) echo esc_attr($options['global_settings']['lightbox_gallery_pages']); ?>" /></label></p>
 </td></tr>
 <tr><td>
 <p><label for="lightbox_gallery_enforce_loading_scripts"><?php _e('Enforce loading the lightbox gallery scripts', 'lightbox-gallery'); ?>:<br />
@@ -317,15 +317,15 @@ function lightbox_gallery_admin() {
 </td></tr>
 <tr><td>
 <p><label for="lightbox_gallery_columns"><?php _e('In case that you would like to set the default number of columns', 'lightbox-gallery'); ?>:<br />
-<input type="text" name="lightbox_gallery_columns" id="lightbox_gallery_columns" value="<?php if ( isset($options['global_settings']['lightbox_gallery_columns']) ) echo $options['global_settings']['lightbox_gallery_columns']; ?>" size="3" /></label></p>
+	<input type="text" name="lightbox_gallery_columns" id="lightbox_gallery_columns" value="<?php if ( isset($options['global_settings']['lightbox_gallery_columns']) ) echo esc_attr($options['global_settings']['lightbox_gallery_columns']); ?>" size="3" /></label></p>
 </td></tr>
 <tr><td>
 <p><label for="lightbox_gallery_thumbnailsize"><?php _e('In case that you would like to set the default thumbnail size', 'lightbox-gallery'); ?>:<br />
-<input type="text" name="lightbox_gallery_thumbnailsize" id="lightbox_gallery_thumbnailsize" value="<?php if ( isset($options['global_settings']['lightbox_gallery_thumbnailsize']) ) echo $options['global_settings']['lightbox_gallery_thumbnailsize']; ?>" /> thumbnail medium large full</label></p>
+	<input type="text" name="lightbox_gallery_thumbnailsize" id="lightbox_gallery_thumbnailsize" value="<?php if ( isset($options['global_settings']['lightbox_gallery_thumbnailsize']) ) echo esc_attr($options['global_settings']['lightbox_gallery_thumbnailsize']); ?>" /> thumbnail medium large full</label></p>
 </td></tr>
 <tr><td>
 <p><label for="lightbox_gallery_lightboxsize"><?php _e('In case that you would like to set the default lightbox size', 'lightbox-gallery'); ?>:<br />
-<input type="text" name="lightbox_gallery_lightboxsize" id="lightbox_gallery_lightboxsize" value="<?php if ( isset($options['global_settings']['lightbox_gallery_lightboxsize']) ) echo $options['global_settings']['lightbox_gallery_lightboxsize']; ?>" /> thumbnail medium large full</label></p>
+	<input type="text" name="lightbox_gallery_lightboxsize" id="lightbox_gallery_lightboxsize" value="<?php if ( isset($options['global_settings']['lightbox_gallery_lightboxsize']) ) echo esc_attr($options['global_settings']['lightbox_gallery_lightboxsize']); ?>" /> thumbnail medium large full</label></p>
 </td></tr>
 <tr><td>
 <?php
@@ -383,7 +383,7 @@ function lightbox_gallery_admin() {
 <h3><?php _e('CMS x WP', 'lightbox-gallery'); ?></h3>
 <div class="inside">
 <p><?php _e('There are much more plugins which are useful for developing business websites such as membership sites or ec sites. You could totally treat WordPress as CMS by use of CMS x WP plugins.', 'lightbox-gallery'); ?></p>
-<p style="text-align:center"><a href="http://www.cmswp.jp/" target="_blank"><img src="<?php echo get_option('home') . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/'; ?>cmswp.jpg" width="125" height="125" alt="CMSxWP" /></a><br /><a href="http://www.cmswp.jp/" target="_blank"><?php _e('WordPress plugin sales site: CMS x WP', 'lightbox-gallery'); ?></a></p>
+<p style="text-align:center"><a href="http://www.cmswp.jp/" target="_blank"><img src="<?php echo trailingslashit(WP_PLUGIN_URL).'js/cmswp.jpg'); ?>" width="125" height="125" alt="CMSxWP" /></a><br /><a href="http://www.cmswp.jp/" target="_blank"><?php _e('WordPress plugin sales site: CMS x WP', 'lightbox-gallery'); ?></a></p>
 </div>
 </div>
 <?php
