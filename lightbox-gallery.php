@@ -95,7 +95,7 @@ function lightbox_gallery_wp_head() {
 			if (@file_exists(trailingslashit(get_stylesheet_directory()).'lightbox-gallery.css')) {
 				echo '<link rel="stylesheet" href="'.get_stylesheet_directory_uri().'/lightbox-gallery.css" type="text/css" />'."\n";	
 			} else {
-				echo '<link rel="stylesheet" type="text/css" href="' . trailingslashit(WP_PLUGIN_URL) . 'lightbox-gallery.css') . " />'."\n";
+				echo '<link rel="stylesheet" type="text/css" href="' . trailingslashit(WP_PLUGIN_URL) . 'lightbox-gallery.css" />'."\n";
 			}
 		endif;
 	}
@@ -278,7 +278,7 @@ function lightbox_gallery_admin() {
 <p><label for="lightbox_gallery_loading_type"><?php _e('Choose the gallery loading type', 'lightbox-gallery'); ?></label>:<br />
 <input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="lightbox"<?php checked('lightbox', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Lightbox', 'lightbox-gallery'); ?>
 <?php
-	if ( file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') ) :
+	if ( file_exists(trailingslashit(WP_PLUGIN_DIR).'/js/highslide.js') ) :
 ?>
 <br /><input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="highslide"<?php checked('highslide', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Highslide JS', 'lightbox-gallery'); ?><br />
 <?php echo sprintf(__('Caution: Highslide JS is licensed under a Creative Commons Attribution-NonCommercial 2.5 License. You need the author\'s permission to use Highslide JS on commercial websites. <a href="%s" target="_blank">Please look at the author\'s website.</a>', 'lightbox-gallery'), 'http://highslide.com/'); ?>
@@ -383,7 +383,7 @@ function lightbox_gallery_admin() {
 <h3><?php _e('CMS x WP', 'lightbox-gallery'); ?></h3>
 <div class="inside">
 <p><?php _e('There are much more plugins which are useful for developing business websites such as membership sites or ec sites. You could totally treat WordPress as CMS by use of CMS x WP plugins.', 'lightbox-gallery'); ?></p>
-<p style="text-align:center"><a href="http://www.cmswp.jp/" target="_blank"><img src="<?php echo trailingslashit(WP_PLUGIN_URL).'js/cmswp.jpg'); ?>" width="125" height="125" alt="CMSxWP" /></a><br /><a href="http://www.cmswp.jp/" target="_blank"><?php _e('WordPress plugin sales site: CMS x WP', 'lightbox-gallery'); ?></a></p>
+<p style="text-align:center"><a href="http://www.cmswp.jp/" target="_blank"><img src="<?php echo trailingslashit(WP_PLUGIN_URL).'js/cmswp.jpg'; ?>" width="125" height="125" alt="CMSxWP" /></a><br /><a href="http://www.cmswp.jp/" target="_blank"><?php _e('WordPress plugin sales site: CMS x WP', 'lightbox-gallery'); ?></a></p>
 </div>
 </div>
 <?php
