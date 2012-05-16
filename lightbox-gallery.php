@@ -4,7 +4,7 @@ Plugin Name: Lightbox Gallery
 Plugin URI: http://wpgogo.com/development/lightbox-gallery.html
 Description: The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 Author: Hiroaki Miyashita
-Version: 0.6.8
+Version: 0.7.2
 Author URI: http://wpgogo.com/
 */
 
@@ -25,7 +25,7 @@ Author URI: http://wpgogo.com/
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-add_action( 'init', 'lightbox_gallery_textdomain' );
+add_action( 'init', 'lightbox_gallery_init' );
 add_action( 'wp_head', 'lightbox_gallery_wp_head' );
 add_action( 'wp_print_scripts', 'lightbox_gallery_wp_print_scripts' );
 add_action( 'wp_print_scripts', 'lightbox_gallery_print_path_header', 1 );
@@ -35,7 +35,7 @@ add_action( 'admin_menu', 'lightbox_gallery_admin_menu' );
 add_filter( 'media_send_to_editor', 'lightbox_gallery_media_send_to_editor', 11 );
 add_shortcode( 'gallery', 'lightbox_gallery' );
 
-function lightbox_gallery_textdomain() {
+function lightbox_gallery_init() {
 	if ( function_exists('load_plugin_textdomain') ) {
 		if ( !defined('WP_PLUGIN_DIR') ) {
 			load_plugin_textdomain('lightbox-gallery', str_replace( ABSPATH, '', dirname(__FILE__) ) );
@@ -43,6 +43,17 @@ function lightbox_gallery_textdomain() {
 			load_plugin_textdomain('lightbox-gallery', false, dirname( plugin_basename(__FILE__) ) );
 		}
 	}
+
+	if ( !defined('WP_PLUGIN_DIR') )
+		$plugin_dir = str_replace( ABSPATH, '', dirname(__FILE__) );
+	else
+		$plugin_dir = dirname( plugin_basename(__FILE__) );
+
+	$options = get_option('lightbox_gallery_data');
+	if ( empty($options['global_settings']['lightbox_gallery_loading_type']) || ( $options['global_settings']['lightbox_gallery_loading_type']=='lightbox' && !file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js')) ) :
+		$options['global_settings']['lightbox_gallery_loading_type'] = 'colorbox';
+		update_option('lightbox_gallery_data', $options);
+	endif;
 }
 
 function lightbox_gallery_wp_head() {
@@ -150,17 +161,27 @@ function lightbox_gallery_wp_print_scripts() {
 	endif;
 	
 	if ( !is_admin() && $flag ) :
+		$template = get_template();
 		wp_enqueue_script( 'jquery' );
-		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' && file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') ) :
-			wp_enqueue_script( 'highslide', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js', false, '', $in_footer );
-		else :
+		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' ) :
+			if ( file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') ) :
+				wp_enqueue_script( 'highslide', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js', false, '', $in_footer );
+			elseif ( file_exists(TEMPLATEPATH.'/highslide.js') ) :
+				wp_enqueue_script( 'highslide', WP_CONTENT_DIR . '/themes/' . $template . '/highslide.js', array('jquery'), '', $in_footer );
+			endif;
+		elseif ( $options['global_settings']['lightbox_gallery_loading_type'] == 'lightbox' ) :
+			if ( file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js') ) :
+				wp_enqueue_script( 'lightbox', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js', array('jquery'), '', $in_footer );
+			elseif ( file_exists(TEMPLATEPATH.'/jquery.lightbox.js') ) :
+				wp_enqueue_script( 'lightbox', WP_CONTENT_DIR . '/themes/' . $template . '/jquery.lightbox.js', array('jquery'), '', $in_footer );
+			endif;
 			wp_enqueue_script( 'dimensions', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.dimensions.js', array('jquery'), '', $in_footer );
 			wp_enqueue_script( 'bgiframe', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.bgiframe.js', array('jquery'), '', $in_footer ) ;
-			wp_enqueue_script( 'lightbox', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js', array('jquery'), '', $in_footer );
-			wp_enqueue_script( 'tooltip', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.tooltip.js', array('jquery'), '', $in_footer );
+		else :
+			wp_enqueue_script( 'colorbox', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.colorbox.js', array('jquery'), '', $in_footer );
 		endif;
-		if (@file_exists(TEMPLATEPATH.'/lightbox-gallery.js')) :
-			$template = get_template();
+		wp_enqueue_script( 'tooltip', '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.tooltip.js', array('jquery'), '', $in_footer );
+		if ( @file_exists(TEMPLATEPATH.'/lightbox-gallery.js') ) :
 			wp_enqueue_script( 'lightbox-gallery', '/wp-content/themes/' . $template . '/lightbox-gallery.js', array('jquery'), '', $in_footer );
 		else :
 			wp_enqueue_script( 'lightbox-gallery', '/' . PLUGINDIR . '/' . $plugin_dir . '/lightbox-gallery.js', array('jquery'), '', $in_footer );
@@ -178,7 +199,7 @@ function lightbox_gallery_print_path_header() {
 		echo '// <![CDATA['."\n";
 		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' ) :
 			echo 'var graphicsDir = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/graphics/";'."\n";
-		else :
+		elseif ( $options['global_settings']['lightbox_gallery_loading_type'] == 'lightbox' ) :
 			echo 'var lightbox_path = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/";'."\n";
 		endif;
 		echo '// ]]>'."\n";
@@ -196,7 +217,7 @@ function lightbox_gallery_print_path_footer() {
 		echo '// <![CDATA['."\n";
 		if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' ) :
 			echo 'var graphicsDir = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/graphics/";'."\n";
-		else :
+		elseif ( $options['global_settings']['lightbox_gallery_loading_type'] == 'lightbox' ) :
 			echo 'var lightbox_path = "'.get_option('siteurl').'/wp-content/plugins/lightbox-gallery/";'."\n";
 		endif;
 		echo '// ]]>'."\n";
@@ -246,6 +267,19 @@ function lightbox_gallery_admin() {
 		delete_option('lightbox_gallery_data');
 		$options = get_option('lightbox_gallery_data');
 		$message = __('Options deleted.', 'lightbox-gallery');
+	elseif ( !empty($_POST['lightbox_gallery_script_auto_download_submit']) ) :
+		if ( !defined('WP_PLUGIN_DIR') )
+			$plugin_dir = str_replace( ABSPATH, '', dirname(__FILE__) );
+		else
+			$plugin_dir = dirname( plugin_basename(__FILE__) );
+
+		$lightbox = @file_get_contents('http://wpgogo.com/jquery.lightbox.js');
+		$highslide = @file_get_contents('http://wpgogo.com/highslide.js');
+		if ( !empty($lightbox) && !empty($highslide) && file_put_contents(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js', $lightbox) && file_put_contents(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js', $highslide) ) :
+			$message = __('Scripts downloaded.', 'lightbox-gallery');
+		else :
+			$message = __('Download failed.', 'lightbox-gallery');
+		endif;
 	endif;
 	
 	if ( !defined('WP_PLUGIN_DIR') )
@@ -276,16 +310,31 @@ function lightbox_gallery_admin() {
 	if ( !isset($options['global_settings']['lightbox_gallery_loading_type']) ) $options['global_settings']['lightbox_gallery_loading_type'] = 'lightbox';
 ?>
 <p><label for="lightbox_gallery_loading_type"><?php _e('Choose the gallery loading type', 'lightbox-gallery'); ?></label>:<br />
-<input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="lightbox"<?php checked('lightbox', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Lightbox', 'lightbox-gallery'); ?>
+<input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="colorbox"<?php checked('colorbox', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Colorbox', 'lightbox-gallery'); ?><br />
 <?php
-	if ( file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') ) :
+	if ( file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js') || file_exists(TEMPLATEPATH.'/jquery.lightbox.js') ) :
 ?>
-<br /><input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="highslide"<?php checked('highslide', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Highslide JS', 'lightbox-gallery'); ?><br />
-<?php echo sprintf(__('Caution: Highslide JS is licensed under a Creative Commons Attribution-NonCommercial 2.5 License. You need the author\'s permission to use Highslide JS on commercial websites. <a href="%s" target="_blank">Please look at the author\'s website.</a>', 'lightbox-gallery'), 'http://highslide.com/'); ?>
+<input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="lightbox"<?php checked('lightbox', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Lightbox', 'lightbox-gallery'); ?><br />
 <?php
 	else :
 ?>
-<br /><?php echo sprintf(__('You can change the lightbox view to the highslide. Just <a href="%s" target="_blank">download</a> the highslide script and put `highslide.js` into `/lightbox-gallery/js/` and `graphics` directory into `/lightbox-gallery/`.', 'lightbox-gallery'), 'http://highslide.com/'); ?>
+<ul style="list-style-type:disc; padding-left:1.2em;">
+<li><?php echo sprintf(__('Due to the license regulation by the plugin directory, it is impossible to include `jquery.lightbox.js`. Just <a href="%s" target="_blank">download</a> the lightbox script and put `jquery.lightbox.js` into `/lightbox-gallery/js/`.', 'lightbox-gallery'), 'http://wpgogo.com/jquery.lightbox.js'); ?></li>
+</ul>
+<?php
+	endif;
+	if ( file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') || file_exists(TEMPLATEPATH.'/highslide.js') ) :
+?>
+<input type="radio" name="lightbox_gallery_loading_type" id="lightbox_gallery_loading_type" value="highslide"<?php checked('highslide', $options['global_settings']['lightbox_gallery_loading_type']); ?> /> <?php _e('Highslide JS', 'lightbox-gallery'); ?><br />
+<ul style="list-style-type:disc; padding-left:1.2em;">
+<li><?php echo sprintf(__('Caution: Highslide JS is licensed under a Creative Commons Attribution-NonCommercial 2.5 License. You need the author\'s permission to use Highslide JS on commercial websites. <a href="%s" target="_blank">Please look at the author\'s website.</a>', 'lightbox-gallery'), 'http://highslide.com/'); ?></li>
+</ul>
+<?php
+	else :
+?>
+<ul style="list-style-type:disc; padding-left:1.2em;">
+<li><?php echo sprintf(__('You can change the lightbox view to the highslide. Just <a href="%s" target="_blank">download</a> the highslide script and put `highslide.js` into `/lightbox-gallery/js/`.', 'lightbox-gallery'), 'http://wpgogo.com/highslide.js'); ?></li>
+</ul>
 <?php
 	endif;
 ?>
@@ -362,6 +411,22 @@ function lightbox_gallery_admin() {
 </div>
 
 <div style="width:24%; float:right;">
+<?php
+	if ( (!file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/jquery.lightbox.js') && !file_exists(TEMPLATEPATH.'/jquery.lightbox.js')) || (!file_exists(ABSPATH . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/highslide.js') && !file_exists(TEMPLATEPATH.'/highslide.js')) ) :
+?>
+<div class="postbox" style="min-width:200px;">
+<div class="handlediv" title="<?php _e('Click to toggle', 'lightbox-gallery'); ?>"><br /></div>
+<h3><?php _e('Script Auto Download', 'lightbox-gallery'); ?></h3>
+<div class="inside">
+<p><?php _e('Just push the button and `jquery.lightbox.js` and `highslide.js` will be downloaded automatically.', 'lightbox-gallery'); ?></p>
+<form method="post">
+<p><input type="submit" name="lightbox_gallery_script_auto_download_submit" value="<?php _e('Download Scripts &raquo;', 'lightbox-gallery'); ?>" class="button-primary" /></p>
+</div>
+</div>
+<?php
+	endif;
+?>
+
 <div class="postbox" style="min-width:200px;">
 <div class="handlediv" title="<?php _e('Click to toggle', 'lightbox-gallery'); ?>"><br /></div>
 <h3><?php _e('Donation', 'lightbox-gallery'); ?></h3>
@@ -383,7 +448,7 @@ function lightbox_gallery_admin() {
 <h3><?php _e('CMS x WP', 'lightbox-gallery'); ?></h3>
 <div class="inside">
 <p><?php _e('There are much more plugins which are useful for developing business websites such as membership sites or ec sites. You could totally treat WordPress as CMS by use of CMS x WP plugins.', 'lightbox-gallery'); ?></p>
-<p style="text-align:center"><a href="http://www.cmswp.jp/" target="_blank"><img src="<?php echo get_option('home') . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/'; ?>cmswp.jpg" width="125" height="125" alt="CMSxWP" /></a><br /><a href="http://www.cmswp.jp/" target="_blank"><?php _e('WordPress plugin sales site: CMS x WP', 'lightbox-gallery'); ?></a></p>
+<p style="text-align:center"><a href="http://www.cmswp.jp/" target="_blank"><img src="<?php echo get_option('siteurl') . '/' . PLUGINDIR . '/' . $plugin_dir . '/js/'; ?>cmswp.jpg" width="125" height="125" alt="CMSxWP" /></a><br /><a href="http://www.cmswp.jp/" target="_blank"><?php _e('WordPress plugin sales site: CMS x WP', 'lightbox-gallery'); ?></a></p>
 </div>
 </div>
 <?php
@@ -519,7 +584,7 @@ function lightbox_gallery($attr) {
 	
 	$output = apply_filters('gallery_style', $column_css."<div class='gallery {$class}'>");
 	
-	if ( $class && $options['global_settings']['lightbox_gallery_loading_type'] != 'highslide' ) :
+	if ( $class && $options['global_settings']['lightbox_gallery_loading_type'] == 'lightbox' ) :
 		$output .= '<script type="text/javascript">
 // <![CDATA[
 	jQuery(document).ready(function () {
@@ -527,8 +592,17 @@ function lightbox_gallery($attr) {
 	});
 // ]]>
 </script>'."\n";
+	endif;
 
-
+	if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'colorbox') :
+		$output .= '<script type="text/javascript">
+// <![CDATA[
+	jQuery(document).ready(function () {
+		jQuery(".'.$class.' a").attr("rel","'.$class.'");	
+		jQuery(\'a[rel="'.$class.'"]\').colorbox({title: function(){ return jQuery(this).children().attr("alt"); }});
+	});
+// ]]>
+</script>'."\n";
 	endif;
 
 	$i = 0;
@@ -565,6 +639,8 @@ function lightbox_gallery($attr) {
 			if ( $nofollow == "true" ) $output .= ' rel="nofollow"';
 			if ( $options['global_settings']['lightbox_gallery_loading_type'] == 'highslide' ) :
 				$output .= ' class="highslide" onclick="return hs.expand(this,{captionId:'."'caption".$attachment->ID."'".'})"';
+			elseif ( $options['global_settings']['lightbox_gallery_loading_type'] == 'colorbox' ) :
+				$output .= ' rel="'.$class.'"';
 			endif;
 			$output .= '><img src="'.$thumbnail_link[0].'" width="'.$thumbnail_link[1].'" height="'.$thumbnail_link[2].'" alt="'.esc_attr($attachment->post_excerpt).'" /></a>
 </'.$icontag.'>';

@@ -1,14 +1,17 @@
 === Lightbox Gallery ===
 Contributors: Hiroaki Miyashita
 Donate link: http://wpgogo.com/development/lightbox-gallery.html
-Tags: lightbox, gallery, image, images, album, photo, photos, picture, pictures, jQuery, Highslide
+Tags: lightbox, gallery, galleries, image, images, album, photo, photos, picture, pictures, jQuery, Highslide, Colorbox
 Requires at least: 2.5
-Tested up to: 3.3.1
-Stable tag: 0.6.8
+Tested up to: 3.4
+Stable tag: 0.7.2
 
 The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 
 == Description ==
+
+**Importance:**
+From 0.7.1, the default view changed to Colorbox due to the license regulation by the plugin directory. If you would prefer the prior Lightbox to Colorbox, you need to get the script from the setting page.
 
 The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 
@@ -39,6 +42,7 @@ Localization
 * Polish (pl_PL) - Otmar
 * Romanian (ro_RO) - [Anunturi Jibo](http://www.jibo.ro/)
 * Russian (ru_RU) - [Fat Cow](http://www.fatcow.com/)
+* Slovak (sk_SK) - [Viliam Brozman](http://www.brozman.sk/blog/)
 * Swedish (sv_SE) - [Anders Martensson](http://nemrod.se/)
 * Turkish (tr_TR) - [Hakan Demiray](http://www.dmry.net/)
 * Ukrainian (uk_UA) - [Vitalij Lew](http://wpp.pp.ua/)
@@ -125,6 +129,13 @@ If you would like not to show the navigation, set `0`. The default is `1`.
 [gallery num="10" pagenavi="0"]
 
 == Changelog ==
+
+= 0.7.2 =
+* Bugfix: lightbox image path.
+
+= 0.7.1 =
+* The default view changed to Colorbox.
+* Slovak (sk_SK) - Viliam Brozman
 
 = 0.6.8 =
 * Due to the license restriction, the highslide script has been removed.
