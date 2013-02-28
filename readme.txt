@@ -3,8 +3,9 @@ Contributors: Hiroaki Miyashita
 Donate link: http://wpgogo.com/development/lightbox-gallery.html
 Tags: lightbox, gallery, galleries, image, images, album, photo, photos, picture, pictures, jQuery, Highslide, Colorbox
 Requires at least: 2.5
-Tested up to: 3.4.1
-Stable tag: 0.7.3
+Tested up to: 3.5.1
+Stable tag: 0.7.4
+License: GPLv2 or later
 
 The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 
@@ -31,6 +32,7 @@ Localization
 * Belorussian (by_BY) - [ilyuha](http://antsar.info/)
 * Czech (cs_CZ) - [Petufo](http://blog.vlastenci.cz/)
 * Spanish (es_ES) - [Daniel Tarrero](http://www.bluebrain.es/)
+* Danish (da_DK) - [Jacob Voldby](http://www.clmedia.dk)
 * German (de_DE) - Michael Wruck and Tacitus Media
 * French (fr_FR) - [BenLeTibetain](http://www.benletibetain.net/)
 * Hindi (hi_IN) - [Outshine Solutions](http://outshinesolutions.com/web-hosting/web-hosting-india.html)
@@ -130,7 +132,11 @@ If you would like not to show the navigation, set `0`. The default is `1`.
 
 == Changelog ==
 
+= 0.7.4 =
+* Bugfix: support for WordPress 3.5.
+
 = 0.7.3 =
+* Danish (da_DK) - Jacob Voldby
 * Bugfix: rel="lightbox"
 
 = 0.7.2 =
