@@ -3,8 +3,8 @@ Contributors: Hiroaki Miyashita
 Donate link: http://wpgogo.com/development/lightbox-gallery.html
 Tags: lightbox, gallery, galleries, image, images, album, photo, photos, picture, pictures, jQuery, Highslide, Colorbox
 Requires at least: 2.5
-Tested up to: 4.1
-Stable tag: 0.8
+Tested up to: 4.1.1
+Stable tag: 0.8.1
 License: GPLv2 or later
 
 The Lightbox Gallery plugin changes the view of galleries to the lightbox.
@@ -136,6 +136,10 @@ If you would like not to show the navigation, set `0`. The default is `1`.
 [gallery num="10" pagenavi="0"]
 
 == Changelog ==
+
+= 0.8.1 =
+* Backward compatibility: caption loading.
+* Code cleaning.
 
 = 0.8 =
 * Responsive output.

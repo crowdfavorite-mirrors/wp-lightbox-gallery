@@ -4,7 +4,7 @@ Plugin Name: Lightbox Gallery
 Plugin URI: http://wpgogo.com/development/lightbox-gallery.html
 Description: The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 Author: Hiroaki Miyashita
-Version: 0.8
+Version: 0.8.1
 Author URI: http://wpgogo.com/
 */
 
@@ -674,13 +674,14 @@ function lightbox_gallery($attr) {
 			elseif ( $options['global_settings']['lightbox_gallery_loading_type'] == 'colorbox' ) :
 				$output .= ' rel="'.$class.'"';
 			endif;
+			$attachment->_wp_attachment_image_alt = !empty($attachment->_wp_attachment_image_alt) ? $attachment->_wp_attachment_image_alt : $attachment->post_excerpt;
 			$output .= '><img src="'.$thumbnail_link[0].'" width="'.$thumbnail_link[1].'" height="'.$thumbnail_link[2].'" alt="'.esc_attr($attachment->_wp_attachment_image_alt).'" /></a>
 </'.$icontag.'>';
 			if ( $captiontag && (trim($attachment->post_excerpt) || trim($attachment->post_content) || isset($metadata)) ) {
 				$output .= '<'.$captiontag.' class="gallery-caption" id="caption'.$attachment->ID.'">';
 				if($attachment->post_excerpt) $output .= '<span class="imagecaption">'.$attachment->post_excerpt . "</span><br />\n";
 				if($attachment->post_content) $output .= '<span class="imagedescription">'.$attachment->post_content . "</span><br />\n";
-				if($metadata) $output .= '<span class="imagemeta">'.$metadata.'</span>';
+				if( !empty($metadata) ) $output .= '<span class="imagemeta">'.$metadata.'</span>';
 				$output .= '</'.$captiontag.'>';
 			}
 			$output .= '</'.$itemtag.'>';
