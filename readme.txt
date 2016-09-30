@@ -1,14 +1,18 @@
 === Lightbox Gallery ===
 Contributors: Hiroaki Miyashita
 Donate link: http://wpgogo.com/development/lightbox-gallery.html
-Tags: lightbox, gallery, image, images, album, photo, photos, picture, pictures, jQuery, Highslide
+Tags: lightbox, gallery, galleries, image, images, album, photo, photos, picture, pictures, jQuery, Highslide, Colorbox
 Requires at least: 2.5
-Tested up to: 3.3.1
-Stable tag: 0.6.8
+Tested up to: 4.5.1
+Stable tag: 0.8.3
+License: GPLv2 or later
 
 The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 
 == Description ==
+
+**Importance:**
+From 0.7.1, the default view changed to Colorbox due to the license regulation by the plugin directory. If you would prefer the prior Lightbox to Colorbox, you need to get the script from the setting page.
 
 The Lightbox Gallery plugin changes the view of galleries to the lightbox.
 
@@ -28,7 +32,9 @@ Localization
 * Belorussian (by_BY) - [ilyuha](http://antsar.info/)
 * Czech (cs_CZ) - [Petufo](http://blog.vlastenci.cz/)
 * Spanish (es_ES) - [Daniel Tarrero](http://www.bluebrain.es/)
+* Danish (da_DK) - [Jacob Voldby](http://www.clmedia.dk)
 * German (de_DE) - Michael Wruck and Tacitus Media
+* Farsi (fa_IR) - [Ehsan Razavi](http://webdata.in/)
 * French (fr_FR) - [BenLeTibetain](http://www.benletibetain.net/)
 * Hindi (hi_IN) - [Outshine Solutions](http://outshinesolutions.com/web-hosting/web-hosting-india.html)
 * Croatian (hr) - [Tomislav Konestabo](http://aciddot.com/)
@@ -39,6 +45,7 @@ Localization
 * Polish (pl_PL) - Otmar
 * Romanian (ro_RO) - [Anunturi Jibo](http://www.jibo.ro/)
 * Russian (ru_RU) - [Fat Cow](http://www.fatcow.com/)
+* Slovak (sk_SK) - [Viliam Brozman](http://www.brozman.sk/blog/)
 * Swedish (sv_SE) - [Anders Martensson](http://nemrod.se/)
 * Turkish (tr_TR) - [Hakan Demiray](http://www.dmry.net/)
 * Ukrainian (uk_UA) - [Vitalij Lew](http://wpp.pp.ua/)
@@ -48,14 +55,15 @@ If you have translated into your language, please let me know.
 
 == Installation ==
 
-1. Edit the `lightbox-gallery.js` and check the path of line 2 according to your settings.
-2. Copy the `lightbox-gallery` directory into your `wp-content/plugins` directory
-3. Activate the plugin through the 'Plugins' menu in WordPress
-4. There may exist localized images in 'images' directory. Replace default images with them.
-5. That's it! :)
+1. Activate the plugin through the 'Plugins' menu in WordPress
+2. Just upload images and write down the [gallery] shortcode in the post content. 
+3. That's it! :)
 
 Lightbox Gallery will load 'lightbox-gallery.css' and 'lightbox-gallery.js' from your theme's directory if they exist. 
 If they don't exist, they will just load the default 'lightbox-gallery.css' and 'lightbox-gallery.js' that come with Lightbox Gallery. This will allow you to upgrade Lightbox Gallery without worrying about overwriting your lightbox gallery styles that you have created.
+
+* Edit the `lightbox-gallery.js` and check the path of line 2 according to your settings.
+* There may exist localized images in 'images' directory. Replace default images with them.
 
 == Frequently Asked Questions ==
 * How can I make regular images appear in a lightbox without [gallery] shortcode?
@@ -70,6 +78,10 @@ Just add rel="lightbox" into "a" tag. Here is a sample.
 
 If you would like to handle galleries separately, add different class names 
 into [gallery]. ex) [gallery class="gallery2"]
+
+* Java Script does not seem to be loading?
+
+Check out your theme has `wp_head()` in the header and `wp_footer()` in ther footer.
 
 == Screenshots ==
 
@@ -125,6 +137,37 @@ If you would like not to show the navigation, set `0`. The default is `1`.
 [gallery num="10" pagenavi="0"]
 
 == Changelog ==
+
+= 0.8.3 =
+* Code cleaning.
+
+= 0.8.2 =
+* CSS loading in a child theme.
+
+= 0.8.1 =
+* Backward compatibility: caption loading.
+* Code cleaning.
+
+= 0.8 =
+* Responsive output.
+* Gallery code renewal.
+
+= 0.7.5 =
+* Farsi (fa_IR) - Ehsan Razavi
+
+= 0.7.4 =
+* Bugfix: support for WordPress 3.5.
+
+= 0.7.3 =
+* Danish (da_DK) - Jacob Voldby
+* Bugfix: rel="lightbox"
+
+= 0.7.2 =
+* Bugfix: lightbox image path.
+
+= 0.7.1 =
+* The default view changed to Colorbox.
+* Slovak (sk_SK) - Viliam Brozman
 
 = 0.6.8 =
 * Due to the license restriction, the highslide script has been removed.
